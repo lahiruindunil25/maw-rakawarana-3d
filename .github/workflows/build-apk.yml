@@ -1,3 +1,4 @@
+
 name: Build Maw Rakawarana 3D APK
 
 on:
@@ -37,13 +38,14 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Install Android SDK packages
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools"
 
       - name: Build APK
         working-directory: ${{ env.PROJECT_ROOT }}
         run: |
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
           npm install
           npx tailwindcss -i ./src/tailwind-input.css -o ./app/src/main/assets/css/tailwind.css --minify
           node scripts/copy-fontawesome.js
